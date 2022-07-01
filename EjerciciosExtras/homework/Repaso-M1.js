@@ -1,3 +1,4 @@
+const { isString } = require('markdown-it/lib/common/utils.js');
 const {
     Queue,
     Node,
@@ -16,9 +17,17 @@ const {
 
 var countArray = function(array) {
     // Tu código aca:
-    
-}
+    let sum = 0;
 
+    for(let i = 0; i < array.length; i++){
+        if(Array.isArray(array[i])){
+            sum += countArray(array[i]);
+        }else{
+            sum += array[i];
+        }
+    }
+    return sum;
+}
 
 // Implementar la función countProps: a partir de un objeto en el cual cada propiedad puede contener
 // cualquier tipo de dato, determinar la cantidad de propiedades de objetos en cualquier nivel, ya sea el inicial
@@ -39,9 +48,18 @@ var countArray = function(array) {
 
 var countProps = function(obj) {
     // Tu código aca:
+    let count = 0;
 
+    for(let prop in obj){
+        count++;
+        if(typeof obj[prop] === "object"){
+            if(!Array.isArray(obj[prop])){ //el signo de exclamación resalta negación, es decir, si NO es un array dentro de obj prop.
+                count += countProps(obj[prop]);
+            }
+        }
+    }
+    return count;
 }
-
 
 // Implementar el método changeNotNumbers dentro del prototype de LinkedList que deberá cambiar
 // aquellos valores que no puedan castearse a numeros por 'Kiricocho' y devolver la cantidad de cambios que hizo
@@ -53,9 +71,18 @@ var countProps = function(obj) {
 
 LinkedList.prototype.changeNotNumbers = function(){
     // Tu código aca:
+    let current = this.head;
+    let count = 0;
 
+    while(current){
+        if(isNaN(Number(current.value))){ //si un string es imposible que se convierta en número, arrojará como resultado Nan, y así se descarta que un string sea un número, ya que "2", puede convertirse en un 2, a diferencia de un string de letras.
+            count++;
+            current.value = "Kirikocho";
+        }
+        current = current.next;
+    }
+    return count;
 }
-
 
 // Implementar la función mergeQueues que a partir de dos queues recibidas por parametro
 // debe devolver una nueva Queue que vaya mergeando los nodos de las anteriores.
@@ -67,9 +94,16 @@ LinkedList.prototype.changeNotNumbers = function(){
 
 var mergeQueues = function(queueOne, queueTwo) {
     // Tu código aca:
+    let queue = new Queue();
 
+    while(queueOne.size() || queueTwo.size()){
+        let firstElement = queueOne.dequeue();
+        let secondElement = queueTwo.dequeue();
+        if(queueOne.size()) queue.enqueue(firstElement);
+        if(queueTwo.size()) queue.enqueue(secondElement);
+    }
+    return queue;
 }
-
 
 // Implementar la funcion closureMult que permita generar nuevas funciones que representen
 // las tablas de multiplicación de distintos numeros
@@ -82,15 +116,29 @@ var mergeQueues = function(queueOne, queueTwo) {
 
 var closureMult = function(multiplier) {
     // Tu código aca:
-
+    return function(num){
+        return num * multiplier;
+    }
 }
+
+var multByFour = closureMult(multiplier);
 
 // Implementar el método sum dentro del prototype de BinarySearchTree
 // que debe retornar la suma total de los valores dentro de cada nodo del arbol
 BinarySearchTree.prototype.sum = function() {
     // Tu código aca:
+    if(!this.right && !this.left) return this.value;
+    if(!this.right && this.left) return this.value + this.left.sum();
+    if(!this.left && this.right) return this.value + this.right.sum();
+    if(this.left && this.right) return this.value + this.left.sum() + this.right.sum();
 
 }
+
+// para tener en cuenta los tipos de datos:
+// LinkedList => {head: null}
+// BinarySearchTree => {value: value, right: null, left: null}
+// Queue => {array[]} FIFO (first in, first out)
+// Stack => {array[]} LIFO (last in, first out)
 
 module.exports = {
     countArray,

@@ -19,12 +19,11 @@ function counter() {
   otroContador()      // 2
   otroContador()      // 3
    */
-  let conteo = 1;
+  let conteo = 0; //se establece la variable fuera del bloque de ejecución para que al momento de ejecutar la función múltiples veces, su valor no se reinicie a 0.
   return function nuevoContador(){
     return conteo++;
   }
 }
-const contador = counter();
 
 function cacheFunction(cb) {
   /*
@@ -46,17 +45,16 @@ function cacheFunction(cb) {
   squareCache(5)    // no volverá a invocar a square, simplemente buscará en la caché cuál es el resultado de square(5) y lo retornará (tip: si usaste un objeto, podés usar hasOwnProperty) 
 
   */
-  const objeto = {};
-    return function(arg){
-      if (objeto.hasOwnProperty(arg)){
-        return objeto[arg];
+  const objeto = {}; //se crea de inicio el objeto que almacenará el arg, tal como lo plantea el test.
+    return function(arg){ //se retorna la función que tendrá como parámetro el arg.
+      if (objeto.hasOwnProperty(arg)){ //se pregunta si el objeto tiene a arg como propiedad con el hasOwnProperty.
+        return objeto[arg]; //si lo tiene, retorna la propiedad [arg].
       } else {
-        objeto[arg] = cb(arg);
-        return objeto[arg];
+        objeto[arg] = cb(arg); //se iguala al cb, que es una función que tiene como parámetro a arg, con el parámetro arg del objeto
+        return objeto[arg]; //se retorna nuevamente la propiedad [arg], que es equivalente a retornar a cb(arg).
       }
     }
  }
- const cache = cacheFunction(); 
 
 // Bind
 
@@ -83,7 +81,9 @@ function getNombre() {
 */
 
 let getNombreInstructor = getNombre.bind(instructor);
-let getNombreAlumno = getNombre.bind(alumno)
+let getNombreAlumno = getNombre.bind(alumno);
+
+// Este método sirve para direccionar la palabra clave this. Crea una nueva función, que cuando es llamada, asigna a su operador this el valor entregado, con una secuencia de argumentos dados precediendo a cualquiera entregados cuando la función es llamada.
 
 /*
   Ejercicio 4
@@ -98,6 +98,8 @@ function crearCadena(delimitadorIzquierda, delimitadorDerecha, cadena) {
 let textoAsteriscos = crearCadena.bind(this, "*", "*");
 let textoGuiones = crearCadena.bind(this, "-", "-");
 let textoUnderscore = crearCadena.bind(this, "_", "_");
+
+// como bind() se utiliza en un contexto,, que por lo general es el this, y en este caso, el this nunca se menciona en el return, si o sí se menciona dentro de los parámetros como el primero, y posteriormente, se definen los parámetros (delimitadorIzquierda, delimitadorDerecha, cadena) en el orden respectivo. La cadena no se menciona porque la asigna el usuario.
 
 // No modifiquen nada debajo de esta linea
 // --------------------------------

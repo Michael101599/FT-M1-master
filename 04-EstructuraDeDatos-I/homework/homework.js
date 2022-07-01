@@ -50,6 +50,7 @@ function Queue() {
   }
 };
 
+// Las filas cumplen con la condición First in - First Out, como en una fila para entrar a un lugar. Las Queue tampoco son nativas de JavaScript, por lo que también tendremos que simularlas con los arrays.
 
 // No modifiquen nada debajo de esta linea
 // --------------------------------

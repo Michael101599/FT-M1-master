@@ -10,11 +10,60 @@ Implementar la clase LinkedList, definiendo los siguientes métodos:
   search(isEven), donde isEven es una función que retorna true cuando recibe por parámetro un número par, busca un nodo cuyo valor sea un número par.
   En caso de que la búsqueda no arroje resultados, search debe retornar null.
 */
+//metáfora del tren
+function LinkedList() { //esta es la locomotora, la cual no tiene ninguna carga (contenido), simplemente el null, que será el gancho para los otros vagones (elementos).
+  this.head = null;
+}
 
-function LinkedList() {}
+function Node(value) { //este es el vagón, el cual tiene un value, y a su vez tiene el null (this.next) con el cual se enganchan los otros vagones (elementos)
+  this.value = value;
+  this.next = null;
+}
 
-function Node(value) {}
+LinkedList.prototype.add = function(value){ //se crea un prototype con la función add, la cual nos agregará nuevos elementos a la función constructora.
+  let node = new Node(value);
+  
+  if (this.head === null){ //siempre que head sea null, se le podrán agregar new Node(value) a la función constructora
+    this.head = node;
+  }
+  else {
+    let refer = this.head; //se guarda en una variable un head que hace referencia al null original
+    while(refer.next !== null){
+      refer = refer.next; //pero dado el caso que el head ya esté ocupado con un new Node(value), entonces refer pasa a ser un .next, es decir, un null
+    }
+    refer.next = node; //y ese refer.next que reemplaza al this.head, es el que guardará el nuevo value que se genere
+  }
+}
 
+LinkedList.prototype.search = function(value){
+  let refer = this.head;
+
+  if (this.head.value === value){
+    return true;
+  }
+  else{
+    while(refer.next !== null){
+      if(refer.next.value === value){
+        refer = refer.next;
+      }
+    }
+  }
+  return false;
+}
+
+LinkedList.prototype.remove = function(){
+  let refer = this.head;
+
+  if (refer === null){
+    return null;
+  }
+  else if (refer !== null && refer.next === null){
+    let aux = this.head.value;
+    this.head = null;
+    this.head._length--;
+    return aux;
+  }
+}
 /*
 Implementar la clase HashTable.
 
@@ -30,7 +79,40 @@ La clase debe tener los siguientes métodos:
 Ejemplo: supongamos que quiero guardar {instructora: 'Ani'} en la tabla. Primero puedo chequear, con hasKey, si ya hay algo en la tabla con el nombre 'instructora'; luego, invocando set('instructora', 'Ani'), se almacenará el par clave-valor en un bucket específico (determinado al hashear la clave)
 */
 
-function HashTable() {}
+function HashTable() {
+  this.numBuckets = 35;
+  this.bucket = [];
+}
+
+HashTable.prototype.hash = function(key){
+  let sum = 0;
+  for(let i = 0; i < key.length; i++){
+    sum += key.charCodeAt(i);
+  }
+  return sum % this.numBuckets;
+}
+
+HashTable.prototype.set = function(){
+  if (typeof key !== "string"){
+    throw TypeError ("Keys must be strings");
+  }
+  let i = this.hash(key);
+  if (this.buckets[i] === undefined){
+    this.bucket[i] = {};
+  }
+  this.buckets[i][key] = value;
+}
+
+HashTable.prototype.get = function(key){
+  let i = this.hash(key);
+  return this.buckets[i][key];
+}
+
+HashTable.prototype.hasKey = function(key){
+  let i = this.hash(key);
+  return this.buckets[i].hasOwnProperty(key);
+}
+
 
 // No modifiquen nada debajo de esta linea
 // --------------------------------
